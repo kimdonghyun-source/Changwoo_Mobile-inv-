@@ -30,23 +30,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginTop="200dp"
         android:padding="5dp">
-
-        <RelativeLayout android:id="@+id/RelativeLayout01"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            xmlns:android="http://schemas.android.com/apk/res/android">
 
         <ImageButton
             android:id="@+id/bt_menu_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="left"
             android:background="@android:color/transparent"
-            android:src="@drawable/main_menu2" />
+            android:src="@drawable/main_menu1" />
 
-        </RelativeLayout>
-
+            <ImageButton
+                android:id="@+id/bt_menu_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:src="@drawable/main_menu2" />
 
     </LinearLayout>
 </LinearLayout>

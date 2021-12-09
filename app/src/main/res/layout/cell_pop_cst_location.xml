@@ -4,11 +4,8 @@
     android:layout_height="wrap_content"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
     <TextView
         android:id="@+id/tv_code"
         android:layout_width="0dp"
@@ -25,28 +22,7 @@
         android:layout_gravity="center|left"
         android:textSize="20dp"
         android:textColor="@color/color_666666"/>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center|left"
-            android:textSize="20dp"
-            android:textColor="@color/color_666666"/>
-        <TextView
-            android:id="@+id/tv_deli_place"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center|left"
-            android:textSize="20dp"
-            android:textColor="@color/color_666666"/>
-
-    </LinearLayout>
 
 </LinearLayout>

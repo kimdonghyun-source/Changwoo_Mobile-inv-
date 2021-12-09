@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.2"
     
     defaultConfig {
-        applicationId "kr.co.LEEKU.wms"
+        applicationId "kr.co.CHANGWOO.wms"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 20042201
@@ -32,8 +32,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""       //이구산업
-            //buildConfigField "String", "API_SERVER", "\"http://61.40.202.48/ERP/Mobile/\""       //이구산업
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
         }
 
         release {
@@ -41,8 +40,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            buildConfigField "String", "API_SERVER", "\"http://mis.leeku.co.kr/ERP/Mobile/\""       //이구산업
-            //buildConfigField "String", "API_SERVER", "\"http://61.40.202.48/ERP/Mobile/\""       //이구산업
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
 
             signingConfig signingConfigs.release
         }
