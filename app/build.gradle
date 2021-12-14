@@ -33,6 +33,7 @@ android {
 
             //buildConfig 설정
             buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
+            //buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/CHANGWOO/Mobile/\""   //창우 라이브
         }
 
         release {
@@ -41,6 +42,7 @@ android {
 
             //buildConfig 설정
             buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
+            //buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/CHANGWOO/Mobile/\""   //창우 라이브
 
             signingConfig signingConfigs.release
         }

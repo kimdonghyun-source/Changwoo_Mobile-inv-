@@ -103,13 +103,12 @@
                 android:src="@drawable/menu_inhouse_bt_search" />
 
             <EditText
-                android:focusable="false"
                 android:id="@+id/et_scan"
-                android:enabled="false"
                 style="@style/EditTextLocation"
                 android:layout_height="wrap_content"/>
 
             <ImageButton
+                android:id="@+id/bt_barcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

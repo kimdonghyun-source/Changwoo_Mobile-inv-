@@ -278,6 +278,7 @@ public class ShipDeatilFragment extends CommonFragment {
 
             final ShipDetailModel.Item item = itemsList.get(position);
 
+            holder.tv_no.setText(Integer.toString(position + 1));
             holder.tv_box_no.setText(Integer.toString(item.getBox_no()));
             holder.tv_itm_name.setText(item.getItm_name());
             holder.tv_order_qty.setText(Integer.toString(item.getSreq_qty()));
@@ -292,6 +293,7 @@ public class ShipDeatilFragment extends CommonFragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
 
+            TextView tv_no;
             TextView tv_itm_name;
             TextView tv_order_qty;
             TextView tv_out_qty;
@@ -300,6 +302,7 @@ public class ShipDeatilFragment extends CommonFragment {
             public ViewHolder(View view) {
                 super(view);
 
+                tv_no = view.findViewById(R.id.tv_no);
                 tv_itm_name = view.findViewById(R.id.tv_itm_name);
                 tv_order_qty = view.findViewById(R.id.tv_order_qty);
                 tv_out_qty = view.findViewById(R.id.tv_out_qty);

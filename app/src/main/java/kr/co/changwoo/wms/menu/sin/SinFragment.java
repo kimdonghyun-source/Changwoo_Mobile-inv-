@@ -2,6 +2,9 @@ package kr.co.changwoo.wms.menu.sin;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,7 +49,7 @@ public class SinFragment extends CommonFragment {
     List<String> mIncode;
     String barcodeScan, beg_barcode, cst_code = null, cst_name = null, getTime;
     EditText et_cst, et_scan;
-    ImageButton bt_cst, bt_next;
+    ImageButton bt_cst, bt_next, bt_barcode;
     RecyclerView sin_listview;
 
     SinCstModel.Item mCstModel;
@@ -60,6 +63,10 @@ public class SinFragment extends CommonFragment {
 
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup mTwoBtnPopup;
+
+    private SoundPool sound_pool;
+    int soundId;
+    MediaPlayer mediaPlayer;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,11 +87,13 @@ public class SinFragment extends CommonFragment {
         et_scan = v.findViewById(R.id.et_scan);
         sin_listview = v.findViewById(R.id.sin_listview);
         bt_next = v.findViewById(R.id.bt_next);
+        bt_barcode = v.findViewById(R.id.bt_barcode);
 
 
         et_cst.setOnClickListener(onClickListener);
         bt_cst.setOnClickListener(onClickListener);
         bt_next.setOnClickListener(onClickListener);
+        bt_barcode.setOnClickListener(onClickListener);
 
         sin_listview.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mAdapter = new ListAdapter(getActivity());
@@ -98,6 +107,9 @@ public class SinFragment extends CommonFragment {
         getTime = sdf.format(date);
 
         ItmListSearch();
+
+        sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        soundId = sound_pool.load(mContext, R.raw.beepum, 1);
 
         return v;
 
@@ -123,27 +135,21 @@ public class SinFragment extends CommonFragment {
                         return;
                     }else{
 
-                        String str1 = barcode;
-                        String word1 = str1.split("    ")[0];
-                        String word2 = str1.split("    ")[1];
+                        try {
+                            String str1 = barcode;
+                            String word1 = str1.split("    ")[0];
+                            String word2 = str1.split("    ")[1];
 
-                        /*if (mIncode != null){
-                            if (mIncode.contains(word1)){
-                                Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
-                                return;
-                            }
+                            et_scan.setText(barcode);
+                            OsrList(word1, Integer.parseInt(word2));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Utils.Toast(mContext, "형식이 올바르지 않습니다.");
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
                         }
 
-                        if (beg_barcode != null){
-                            if (beg_barcode.equals(barcodeScan)){
-                                Utils.Toast(mContext, "동일한 바코드를 스캔하였습니다.");
-                                return;
-                            }
-                        }//beg_barcode*/
-                        //beg_barcode = barcode;
-
-                        et_scan.setText(barcode);
-                        OsrList(word1, Integer.parseInt(word2));
 
                     }
 
@@ -171,6 +177,37 @@ public class SinFragment extends CommonFragment {
                     requestSinSave();
                     break;
 
+                case R.id.bt_barcode:
+
+                    if (et_scan.getText().toString().equals("")){
+                        Utils.Toast(mContext, "바코드 번호를 입력해주세요.");
+                        return;
+                    }
+                    barcodeScan = et_scan.getText().toString();
+
+                    if (cst_code == null){
+                        Utils.Toast(mContext, "거래처를 선택해주세요.");
+                        return;
+                    }else{
+                        try {
+                            String str1 = barcodeScan;
+                            String word1 = str1.split("    ")[0];
+                            String word2 = str1.split("    ")[1];
+
+                            et_scan.setText(barcodeScan);
+                            OsrList(word1, Integer.parseInt(word2));
+
+                        }catch (Exception e){
+                            e.printStackTrace();
+                            Utils.Toast(mContext, "형식이 올바르지 않습니다.");
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
+                        }
+
+                    }
+
+                    break;
             }
 
         }
@@ -285,14 +322,19 @@ public class SinFragment extends CommonFragment {
                         if (mSinModel.getFlag() == ResultModel.SUCCESS) {
 
                             if (model.getItems().size() > 0) {
-                                mAdapter.clearData();
-                                mAdapter.itemsList.clear();
-                                mSinList.clear();
+                                if (mAdapter.getItemCount() > 0) {
+                                    mAdapter.clearData();
+                                    mAdapter.itemsList.clear();
+                                    mSinList.clear();
+                                }
                                 ItmListSearch();
                             }
 
                         } else {
                             Utils.Toast(mContext, model.getMSG());
+                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                            mediaPlayer.start();
 
                         }
                     }
