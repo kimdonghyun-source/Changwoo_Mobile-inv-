@@ -26,6 +26,7 @@ import kr.co.changwoo.wms.common.Define;
 import kr.co.changwoo.wms.custom.BusProvider;
 import kr.co.changwoo.wms.custom.CommonCompatActivity;
 import kr.co.changwoo.wms.custom.CommonFragment;
+import kr.co.changwoo.wms.menu.itm.ItmFragment;
 import kr.co.changwoo.wms.menu.popup.TwoBtnPopup;
 import kr.co.changwoo.wms.menu.ship.ShipDeatilFragment;
 import kr.co.changwoo.wms.menu.ship.ShipFragment;
@@ -75,6 +76,7 @@ public class BaseActivity extends CommonCompatActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add("입고관리");
         list.add("출하관리");
+        list.add("품목관리");
 
 
         ListView listView = findViewById(R.id.list);
@@ -125,6 +127,14 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //출하관리(LIST)
+            case Define.MENU_ITM: {
+                CommonFragment fragment = new ItmFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_ITM, R.id.fl_content);
+                break;
+            }
+
 
         }
 
@@ -159,6 +169,12 @@ public class BaseActivity extends CommonCompatActivity {
             //출하관리(LIST)
             case Define.MENU_SHIP_LIST: {
                 image = R.drawable.changwoo_title2;
+                break;
+            }
+
+            //품목관리
+            case Define.MENU_ITM: {
+                image = R.drawable.changwoo_title3;
                 break;
             }
 
@@ -328,6 +344,13 @@ public class BaseActivity extends CommonCompatActivity {
                                     case Define.MENU_SHIP_LIST: {
                                         CommonFragment fragment = new ShipDeatilFragment();
                                         replaceContent(fragment, Define.TAG_SHIP_LIST, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //품목관리
+                                    case Define.MENU_ITM: {
+                                        CommonFragment fragment = new ItmFragment();
+                                        replaceContent(fragment, Define.TAG_ITM, R.id.fl_content);
                                         break;
                                     }
 

@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 
 import kr.co.changwoo.wms.BuildConfig;
+import kr.co.changwoo.wms.model.ItmModel;
 import kr.co.changwoo.wms.model.ShipBoxModel;
 import kr.co.changwoo.wms.model.ShipDetailModel;
 import kr.co.changwoo.wms.model.ShipNoModel;
@@ -104,6 +105,7 @@ public interface ApiClientService {
      * @param get_date 일자
      * @param cst_code 거래처코드
      * @param user_id 담당
+     * @param etc 비고사항
      */
     @POST("R2JsonProc.asp")
     Call<SinListModel> sp_pda_sin_clo(
@@ -111,18 +113,23 @@ public interface ApiClientService {
             @Query("param1") String mac,
             @Query("param2") String get_date,
             @Query("param3") String cst_code,
-            @Query("param4") String user_id
+            @Query("param4") String user_id,
+            @Query("param5") String etc
     );
 
     /**
      * 출하관리 바코드스캔(12자리)
      * @param proc  프로시져
+     * @param mac
+     * @param time
      * @param barcode
      */
     @POST("R2JsonProc.asp")
     Call<ShipNoModel> sp_pda_ship_scan(
             @Query("proc") String proc,
-            @Query("param1") String barcode
+            @Query("param1") String mac,
+            @Query("param2") String time,
+            @Query("param3") String barcode
     );
 
     /**
@@ -132,7 +139,6 @@ public interface ApiClientService {
      * @param date 일자
      * @param ship_date 출하의뢰일자
      * @param ship_no 출하의뢰순번
-     * @param box_no 박스NO
      * @param barcode 바코드
      */
     @POST("R2JsonProc.asp")
@@ -142,8 +148,7 @@ public interface ApiClientService {
             @Query("param2") String date,
             @Query("param3") String ship_date,
             @Query("param4") String ship_no,
-            @Query("param5") String box_no,
-            @Query("param6") String barcode
+            @Query("param5") String barcode
     );
 
     /**
@@ -153,7 +158,6 @@ public interface ApiClientService {
      * @param date 일자
      * @param ship_date 출하의뢰일자
      * @param ship_no 출하의뢰순번
-     * @param box_no 박스NO
      * @param barcode 바코드
      * @param qty   수량
      */
@@ -164,9 +168,8 @@ public interface ApiClientService {
             @Query("param2") String date,
             @Query("param3") String ship_date,
             @Query("param4") String ship_no,
-            @Query("param5") String box_no,
-            @Query("param6") String barcode,
-            @Query("param7") int qty
+            @Query("param5") String barcode,
+            @Query("param6") int qty
     );
 
     /**
@@ -176,7 +179,6 @@ public interface ApiClientService {
      * @param get_date 일자
      * @param ship_date 출하의뢰일자
      * @param ship_no 출하의뢰순번
-     * @param box_no 박스번호(입력값)
      */
     @POST("R2JsonProc.asp")
     Call<ShipBoxModel> sp_pda_ship_box_read(
@@ -184,9 +186,7 @@ public interface ApiClientService {
             @Query("param1") String mac,
             @Query("param2") String get_date,
             @Query("param3") String ship_date,
-            @Query("param4") String ship_no,
-            @Query("param5") int box_no
-
+            @Query("param4") String ship_no
     );
 
     /**
@@ -229,6 +229,7 @@ public interface ApiClientService {
      * @param get_date 일자
      * @param ship_date 출하의뢰일자
      * @param ship_no   출하의뢰순번
+     * @param emp_code  사원코드
      */
     @POST("R2JsonProc.asp")
     Call<ShipDetailModel> sp_pda_ship_clo(
@@ -236,7 +237,71 @@ public interface ApiClientService {
             @Query("param1") String mac,
             @Query("param2") String get_date,
             @Query("param3") String ship_date,
-            @Query("param4") String ship_no
+            @Query("param4") String ship_no,
+            @Query("param5") String emp_code
+    );
+
+    /**
+     * 품목관리(조회)
+     * @param proc  프로시져
+     * @param userid 유저아이디
+     * @param get_date 일자
+     *
+     */
+    @POST("R2JsonProc.asp")
+    Call<ItmModel> sp_pda_list_in(
+            @Query("proc") String proc,
+            @Query("param1") String userid,
+            @Query("param2") String get_date
+    );
+
+    /**
+     * 품목관리(의뢰품명스캔)
+     * @param proc  프로시져
+     * @param userid 유저아이디
+     * @param get_date 일자
+     * @param barcode 바코드명
+     * @param qty 수량
+     *
+     */
+    @POST("R2JsonProc.asp")
+    Call<ItmModel> sp_pda_itm_in(
+            @Query("proc") String proc,
+            @Query("param1") String userid,
+            @Query("param2") String get_date,
+            @Query("param3") String barcode,
+            @Query("param4") int qty
+
+    );
+
+    /**
+     * 품목관리 삭제
+     * @param proc  프로시져
+     * @param userid 아이디
+     * @param get_date 일자
+     * @param no 순번
+     */
+    @POST("R2JsonProc.asp")
+    Call<ItmModel> sp_pda_itm_del_in(
+            @Query("proc") String proc,
+            @Query("param1") String userid,
+            @Query("param2") String get_date,
+            @Query("param3") int no
+    );
+
+    /**
+     * 품목마감
+     * @param proc  프로시져
+     * @param userid 아이디
+     * @param get_date 일자
+     * @param text  비고
+     */
+    @POST("R2JsonProc.asp")
+    Call<ItmModel> sp_pda_clo_in(
+            @Query("proc") String proc,
+            @Query("param1") String userid,
+            @Query("param2") String get_date,
+            @Query("param3") String text
     );
 
     //로그 찍기

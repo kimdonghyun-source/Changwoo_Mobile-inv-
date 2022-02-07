@@ -32,6 +32,7 @@ import kr.co.changwoo.wms.common.SharedData;
 import kr.co.changwoo.wms.common.Utils;
 import kr.co.changwoo.wms.custom.CommonFragment;
 import kr.co.changwoo.wms.honeywell.AidcReader;
+import kr.co.changwoo.wms.menu.popup.EtcTextPopup;
 import kr.co.changwoo.wms.menu.popup.LocationSinCstList;
 import kr.co.changwoo.wms.menu.popup.OneBtnPopup;
 import kr.co.changwoo.wms.menu.popup.TwoBtnPopup;
@@ -47,7 +48,7 @@ public class SinFragment extends CommonFragment {
 
     Context mContext;
     List<String> mIncode;
-    String barcodeScan, beg_barcode, cst_code = null, cst_name = null, getTime;
+    String barcodeScan, beg_barcode, cst_code = null, cst_name = null, getTime, userID;
     EditText et_cst, et_scan;
     ImageButton bt_cst, bt_next, bt_barcode;
     RecyclerView sin_listview;
@@ -67,6 +68,7 @@ public class SinFragment extends CommonFragment {
     private SoundPool sound_pool;
     int soundId;
     MediaPlayer mediaPlayer;
+    EtcTextPopup mEtcTextPopup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +113,8 @@ public class SinFragment extends CommonFragment {
         sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         soundId = sound_pool.load(mContext, R.raw.beepum, 1);
 
+        userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+
         return v;
 
     }//Close onCreateView
@@ -144,7 +148,15 @@ public class SinFragment extends CommonFragment {
                             OsrList(word1, Integer.parseInt(word2));
                         }catch (Exception e){
                             e.printStackTrace();
-                            Utils.Toast(mContext, "형식이 올바르지 않습니다.");
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "형식이 올바르지 않습니다.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                            //Utils.Toast(mContext, "형식이 올바르지 않습니다.");
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                             mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                             mediaPlayer.start();
@@ -174,19 +186,54 @@ public class SinFragment extends CommonFragment {
                     break;
 
                 case R.id.bt_next:
-                    requestSinSave();
+                   //requestSinSave();
+                    if (mAdapter.getItemCount() == 0){
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "입고 등록할 품목을 스캔해주세요.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
+                        return;
+                    }
+                    mEtcTextPopup = new EtcTextPopup(getActivity(), R.drawable.popup_title_etc_text, getTime, cst_code, cst_name, new Handler() {
+                        @Override
+                        public void handleMessage(Message msg1) {
+                            getActivity().finish();
+                                /*mAdapter.clearData();
+                                mAdapter.notifyDataSetChanged();
+                                et_scan.setText("");*/
+
+                        }
+                    });
                     break;
 
                 case R.id.bt_barcode:
 
                     if (et_scan.getText().toString().equals("")){
-                        Utils.Toast(mContext, "바코드 번호를 입력해주세요.");
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "바코드 번호를 입력해주세요.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
                         return;
                     }
                     barcodeScan = et_scan.getText().toString();
 
                     if (cst_code == null){
-                        Utils.Toast(mContext, "거래처를 선택해주세요.");
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "거래처를 선택해주세요.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
                         return;
                     }else{
                         try {
@@ -199,7 +246,15 @@ public class SinFragment extends CommonFragment {
 
                         }catch (Exception e){
                             e.printStackTrace();
-                            Utils.Toast(mContext, "형식이 올바르지 않습니다.");
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "형식이 올바르지 않습니다.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                             mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                             mediaPlayer.start();
@@ -309,7 +364,7 @@ public class SinFragment extends CommonFragment {
     private void OsrList(final String bar, int qty) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<SinListModel> call = service.sp_pda_itm_chk("sp_pda_itmchk", "", getTime, bar, qty );
+        Call<SinListModel> call = service.sp_pda_itm_chk("sp_pda_itmchk", userID, getTime, bar, qty );
 
         call.enqueue(new Callback<SinListModel>() {
             @Override
@@ -359,7 +414,7 @@ public class SinFragment extends CommonFragment {
     private void ItmListSearch() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<SinListModel> call = service.sp_pda_itm_search("sp_pda_itmList", "", getTime);
+        Call<SinListModel> call = service.sp_pda_itm_search("sp_pda_itmList", userID, getTime);
 
         call.enqueue(new Callback<SinListModel>() {
             @Override
@@ -404,10 +459,10 @@ public class SinFragment extends CommonFragment {
     /**
      * 입고마감
      */
-    private void requestSinSave() {
+    /*private void requestSinSave() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
         String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
-        Call<SinListModel> call = service.sp_pda_sin_clo("sp_pda_sin_clo", "", getTime, cst_code, userID);
+        Call<SinListModel> call = service.sp_pda_sin_clo("sp_pda_sin_clo", userID, getTime, cst_code, userID, "");
 
         call.enqueue(new Callback<SinListModel>() {
             @Override
@@ -445,7 +500,7 @@ public class SinFragment extends CommonFragment {
                 Utils.Toast(mContext, getString(R.string.error_network));
             }
         });
-    }//Close 입고마감
+    }//Close 입고마감*/
 
     /**
      * 리스트내역 삭제
@@ -453,7 +508,7 @@ public class SinFragment extends CommonFragment {
     private void DetailDelete(int no) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<SinListModel> call = service.sp_pda_itm_del("sp_pda_itmDel", "", getTime, no);
+        Call<SinListModel> call = service.sp_pda_itm_del("sp_pda_itmDel", userID, getTime, no);
 
         call.enqueue(new Callback<SinListModel>() {
             @Override

@@ -51,6 +51,7 @@ public class ShipDeatilFragment extends CommonFragment {
     ImageButton bt_next;
     OneBtnPopup mOneBtnPopup;
     TwoBtnPopup twoBtnPopup;
+    String userID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,8 @@ public class ShipDeatilFragment extends CommonFragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         getTime = sdf.format(date);
 
+        userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
+
         BoxReadList();
 
         return v;
@@ -129,7 +132,14 @@ public class ShipDeatilFragment extends CommonFragment {
             switch (view.getId()) {
                 case R.id.bt_next:
                     if (mAdapter.getItemCount() <= 0){
-                        Utils.Toast(mContext, "출하등록할 내역이 없습니다.");
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록할 내역이 없습니다.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
                         return;
                     }
                     requestSinSave();
@@ -146,7 +156,7 @@ public class ShipDeatilFragment extends CommonFragment {
     private void BoxReadList() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipDetailModel> call = service.sp_pda_ship_list("sp_pda_ship_list", "",  getTime, ship_date, ship_seq);
+        Call<ShipDetailModel> call = service.sp_pda_ship_list("sp_pda_ship_list", userID,  getTime, ship_date, ship_seq);
 
         call.enqueue(new Callback<ShipDetailModel>() {
             @Override
@@ -193,8 +203,9 @@ public class ShipDeatilFragment extends CommonFragment {
      */
     private void requestSinSave() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
-        String userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
-        Call<ShipDetailModel> call = service.sp_pda_ship_clo("sp_pda_ship_clo", "", getTime, ship_date, ship_seq);
+
+        String emp_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.EMP_CODE.name(), "");
+        Call<ShipDetailModel> call = service.sp_pda_ship_clo("sp_pda_ship_clo", userID, getTime, ship_date, ship_seq, emp_code);
 
         call.enqueue(new Callback<ShipDetailModel>() {
             @Override

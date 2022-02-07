@@ -18,9 +18,9 @@ public class ShipBoxModel extends ResultModel{
         //번호
         int pda_seq;
         //일자
-        String sreq_date;
+        String ship_date;
         //의뢰서 번호
-        String sreq_no;
+        String ship_no;
         //의뢰서 순번
         String sreq_seq;
         //품목코드
@@ -37,6 +37,8 @@ public class ShipBoxModel extends ResultModel{
         int sreq_rqty;
         //출하량
         int ship_qty;
+        //상태여부
+        String chk_yn;
 
         public int getPda_seq() {
             return pda_seq;
@@ -46,20 +48,20 @@ public class ShipBoxModel extends ResultModel{
             this.pda_seq = pda_seq;
         }
 
-        public String getSreq_date() {
-            return sreq_date;
+        public String getShip_date() {
+            return ship_date;
         }
 
-        public void setSreq_date(String sreq_date) {
-            this.sreq_date = sreq_date;
+        public void setShip_date(String ship_date) {
+            this.ship_date = ship_date;
         }
 
-        public String getSreq_no() {
-            return sreq_no;
+        public String getShip_no() {
+            return ship_no;
         }
 
-        public void setSreq_no(String sreq_no) {
-            this.sreq_no = sreq_no;
+        public void setShip_no(String ship_no) {
+            this.ship_no = ship_no;
         }
 
         public String getSreq_seq() {
@@ -124,6 +126,14 @@ public class ShipBoxModel extends ResultModel{
 
         public void setShip_qty(int ship_qty) {
             this.ship_qty = ship_qty;
+        }
+
+        public String getChk_yn() {
+            return chk_yn;
+        }
+
+        public void setChk_yn(String chk_yn) {
+            this.chk_yn = chk_yn;
         }
     }
 }

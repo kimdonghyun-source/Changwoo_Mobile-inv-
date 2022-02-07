@@ -3,6 +3,7 @@ package kr.co.changwoo.wms.menu.ship;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
@@ -34,13 +35,16 @@ import java.util.List;
 
 import kr.co.changwoo.wms.R;
 import kr.co.changwoo.wms.common.Define;
+import kr.co.changwoo.wms.common.SharedData;
 import kr.co.changwoo.wms.common.Utils;
 import kr.co.changwoo.wms.custom.CommonFragment;
 import kr.co.changwoo.wms.honeywell.AidcReader;
 import kr.co.changwoo.wms.menu.main.BaseActivity;
+import kr.co.changwoo.wms.menu.popup.OneBtnPopup;
 import kr.co.changwoo.wms.menu.sin.SinFragment;
 import kr.co.changwoo.wms.model.ResultModel;
 import kr.co.changwoo.wms.model.ShipBoxModel;
+import kr.co.changwoo.wms.model.ShipDetailModel;
 import kr.co.changwoo.wms.model.ShipNoModel;
 import kr.co.changwoo.wms.model.ShipScanModel;
 import kr.co.changwoo.wms.model.SinListModel;
@@ -54,11 +58,11 @@ public class ShipFragment extends CommonFragment {
 
     Context mContext;
     List<String> mIncode;
-    String barcodeScan, getTime;
+    String barcodeScan, getTime, userID;
     TextView tv_ship_no, tv_cst_name;
     EditText et_box_no, et_barcode;
     RecyclerView Ship_list;
-    ImageButton bt_box_end, bt_list, bt_barcode;
+    ImageButton bt_barcode, bt_next;
 
     ShipScanModel mScanModel;
     List<ShipScanModel.Item> mScanList;
@@ -73,6 +77,7 @@ public class ShipFragment extends CommonFragment {
     private SoundPool sound_pool;
     int soundId;
     MediaPlayer mediaPlayer;
+    OneBtnPopup mOneBtnPopup;
 
 
     @Override
@@ -91,17 +96,16 @@ public class ShipFragment extends CommonFragment {
 
         tv_ship_no = v.findViewById(R.id.tv_ship_no);
         tv_cst_name = v.findViewById(R.id.tv_cst_name);
-        et_box_no = v.findViewById(R.id.et_box_no);
+        //et_box_no = v.findViewById(R.id.et_box_no);
         et_barcode = v.findViewById(R.id.et_barcode);
         Ship_list = v.findViewById(R.id.Ship_list);
-        bt_box_end = v.findViewById(R.id.bt_box_end);
-        bt_list = v.findViewById(R.id.bt_list);
         bt_barcode = v.findViewById(R.id.bt_barcode);
+        bt_next = v.findViewById(R.id.bt_next);
 
         //et_barcode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
-        bt_box_end.setOnClickListener(onClickListener);
-        bt_list.setOnClickListener(onClickListener);
+
         bt_barcode.setOnClickListener(onClickListener);
+        bt_next.setOnClickListener(onClickListener);
 
         Ship_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mAdapter = new ListAdapter(getActivity());
@@ -113,7 +117,7 @@ public class ShipFragment extends CommonFragment {
 
         Ship_list.setLayoutManager(mLayoutManager);
 
-        et_box_no.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        /*et_box_no.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -137,7 +141,7 @@ public class ShipFragment extends CommonFragment {
                 }
                 return true;
             }
-        });
+        });*/
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -146,6 +150,8 @@ public class ShipFragment extends CommonFragment {
 
         sound_pool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         soundId = sound_pool.load(mContext, R.raw.beepum, 1);
+
+        userID = (String) SharedData.getSharedData(mContext, SharedData.UserValue.USER_ID.name(), "");
 
         return v;
 
@@ -170,10 +176,6 @@ public class ShipFragment extends CommonFragment {
                         barcodeScan = barcode;
                     }
 
-                    if (barcodeScan.substring(0, 3).equals("http")){
-                        Log.d("http", "발견");
-                    }
-
                     Log.d("바코드번호", barcodeScan);
                     if (barcodeScan.length() == 12) {
 
@@ -181,19 +183,26 @@ public class ShipFragment extends CommonFragment {
 
                     } else {
                         if (tv_ship_no.getText().toString().equals("")) {
-                            Utils.Toast(mContext, "출하의뢰서를 스캔해주세요.");
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "출하의뢰서를 스캔해주세요.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                             mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                             mediaPlayer.start();
                             return;
                         }
-                        if (et_box_no.getText().toString().equals("")) {
+                        /*if (et_box_no.getText().toString().equals("")) {
                             Utils.Toast(mContext, "BOXNO를 입력해주세요.");
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                             mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                             mediaPlayer.start();
                             return;
-                        }
+                        }*/
                         if (barcodeScan.length() == 16) {
 
                             Ship_itm_req(barcodeScan);
@@ -222,25 +231,39 @@ public class ShipFragment extends CommonFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.bt_box_end:
+                /*case R.id.bt_box_end:
                     if (mAdapter.getItemCount() > 0) {
-                        et_box_no.setFocusable(true);
+                        //et_box_no.setFocusable(true);
                         mAdapter.clearData();
                         mAdapter.itemsList.clear();
                         mBoxList.clear();
                         mAdapter.notifyDataSetChanged();
                         //hideSoftInputFromWindow
-                        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(et_box_no, 0);
+                        *//*InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(et_box_no, 0);*//*
                     } else {
-                        Utils.Toast(mContext, "내역이 없습니다.");
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "내역이 없습니다.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
                         return;
                     }
-                    break;
+                    break;*/
 
-                case R.id.bt_list:
+                /*case R.id.bt_list:
                     if (tv_ship_no.getText().equals("")) {
-                        Utils.Toast(mContext, "출하의뢰서를 먼저 스캔해주세요.");
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "출하의뢰서를 먼저 스캔해주세요.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
                         return;
                     } else {
                         Intent intent = new Intent(getActivity(), BaseActivity.class);
@@ -248,25 +271,32 @@ public class ShipFragment extends CommonFragment {
                         Bundle extras = new Bundle();
                         extras.putString("ship_no", tv_ship_no.getText().toString());
                         extras.putString("cst_name", tv_cst_name.getText().toString());
-                        extras.putString("ship_date", mShipNoModel.getItems().get(0).getSreq_date());
-                        extras.putString("ship_seq", mShipNoModel.getItems().get(0).getSreq_no());
+                        extras.putString("ship_date", mShipNoModel.getItems().get(0).getShip_date());
+                        extras.putString("ship_seq", mShipNoModel.getItems().get(0).getShip_no());
                         intent.putExtra("args", extras);
 
                         if (mAdapter.getItemCount() > 0) {
                             mAdapter.clearData();
                             mAdapter.itemsList.clear();
                             mAdapter.notifyDataSetChanged();
-                            et_box_no.setText("");
+                            //et_box_no.setText("");
                         }
 
                         startActivityForResult(intent, 100);
                     }
 
-                    break;
+                    break;*/
 
                 case R.id.bt_barcode:
                     if (et_barcode.getText().toString().equals("")) {
-                        Utils.Toast(mContext, "바코드 번호를 입력해주세요.");
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "바코드 번호를 입력해주세요.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
                         return;
                     }
                     if (et_barcode.getText().toString().substring(0, 1).equals("*")) {
@@ -281,13 +311,20 @@ public class ShipFragment extends CommonFragment {
 
                     } else {
                         if (tv_ship_no.getText().toString().equals("")) {
-                            Utils.Toast(mContext, "출하의뢰서를 스캔해주세요.");
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "출하의뢰서를 스캔해주세요.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
                             return;
                         }
-                        if (et_box_no.getText().toString().equals("")) {
+                        /*if (et_box_no.getText().toString().equals("")) {
                             Utils.Toast(mContext, "BOXNO를 입력해주세요.");
                             return;
-                        }
+                        }*/
                         if (barcodeScan.length() == 16) {
 
                             Ship_itm_req(barcodeScan);
@@ -302,7 +339,14 @@ public class ShipFragment extends CommonFragment {
                                 Ship_itm_name(word1, Integer.parseInt(word2));
                             }catch (Exception e){
                                 e.printStackTrace();
-                                Utils.Toast(mContext, "형식이 올바르지 않습니다.\n문자와 숫자 사이 간격은 4자리입니다.");
+                                mOneBtnPopup = new OneBtnPopup(getActivity(), "형식이 올바르지 않습니다.\n문자와 숫자 사이 간격은 4자리입니다.", R.drawable.popup_title_alert, new Handler() {
+                                    @Override
+                                    public void handleMessage(Message msg) {
+                                        if (msg.what == 1) {
+                                            mOneBtnPopup.hideDialog();
+                                        }
+                                    }
+                                });
                             }
 
 
@@ -313,10 +357,88 @@ public class ShipFragment extends CommonFragment {
                     }
 
                     break;
+
+                case R.id.bt_next:
+                    if (mAdapter.getItemCount() <= 0){
+                        mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록할 내역이 없습니다.", R.drawable.popup_title_alert, new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mOneBtnPopup.hideDialog();
+                                }
+                            }
+                        });
+                        return;
+                    }
+
+                    for (int i = 0; i < mAdapter.getItemCount(); i ++){
+                        if (mBoxList.get(i).getChk_yn().equals("N")){
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록 불가.", R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                            return;
+                        }
+                    }
+
+                    requestSinSave();
+
+                    break;
             }
 
         }
     };//Close onClick
+
+    /**
+     * 출하등록
+     */
+    private void requestSinSave() {
+        ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
+
+        String emp_code = (String) SharedData.getSharedData(mContext, SharedData.UserValue.EMP_CODE.name(), "");
+        Call<ShipDetailModel> call = service.sp_pda_ship_clo("sp_pda_ship_clo", userID, getTime, mShipNoModel.getItems().get(0).getShip_date(), mShipNoModel.getItems().get(0).getShip_no(), emp_code);
+
+        call.enqueue(new Callback<ShipDetailModel>() {
+            @Override
+            public void onResponse(Call<ShipDetailModel> call, Response<ShipDetailModel> response) {
+                if (response.isSuccessful()) {
+                    ShipDetailModel model = response.body();
+                    if (model != null) {
+                        //mShipScanModel.getFlag().equals("OK")
+                        if (model.getFlag() == ResultModel.SUCCESS) {
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "'"+tv_ship_no.getText().toString() +"'의 출하등록이 완료 되었습니다.",
+                                    R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                        getActivity().finish();
+                                    }
+                                }
+                            });
+
+
+                        } else {
+                            Utils.Toast(mContext, model.getMSG());
+                        }
+                    }
+                } else {
+                    Utils.LogLine(response.message());
+                    Utils.Toast(mContext, response.code() + " : " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ShipDetailModel> call, Throwable t) {
+                Utils.LogLine(t.getMessage());
+                Utils.Toast(mContext, getString(R.string.error_network));
+            }
+        });
+    }//Close 제품출하등록
 
 
     /**
@@ -325,7 +447,7 @@ public class ShipFragment extends CommonFragment {
     private void ShipList(final String bar) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipNoModel> call = service.sp_pda_ship_scan("sp_pda_ship_scan", bar);
+        Call<ShipNoModel> call = service.sp_pda_ship_scan("sp_pda_ship_scan", userID, getTime, bar);
 
         call.enqueue(new Callback<ShipNoModel>() {
             @Override
@@ -340,7 +462,7 @@ public class ShipFragment extends CommonFragment {
                             if (model.getItems().size() > 0) {
                                 tv_cst_name.setText(mShipNoModel.getItems().get(0).getCst_name());
                                 tv_ship_no.setText(bar);
-                                et_box_no.setText("");
+                                //et_box_no.setText("");
                                 if (mAdapter.getItemCount() > 0) {
                                     mAdapter.clearData();
                                     mAdapter.itemsList.clear();
@@ -348,7 +470,7 @@ public class ShipFragment extends CommonFragment {
                                     mAdapter.notifyDataSetChanged();
                                 }
                             }
-
+                            BoxReadList();
                         } else {
                             Utils.Toast(mContext, model.getMSG());
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
@@ -377,8 +499,8 @@ public class ShipFragment extends CommonFragment {
     private void Ship_itm_req(final String bar) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipScanModel> call = service.sp_pda_itm_req("sp_pda_itm_req", "", getTime,
-                mShipNoModel.getItems().get(0).getSreq_date(), mShipNoModel.getItems().get(0).getSreq_no(), et_box_no.getText().toString(), bar);
+        Call<ShipScanModel> call = service.sp_pda_itm_req("sp_pda_itm_req", userID, getTime,
+                mShipNoModel.getItems().get(0).getShip_date(), mShipNoModel.getItems().get(0).getShip_no(), bar);
 
         call.enqueue(new Callback<ShipScanModel>() {
             @Override
@@ -397,7 +519,15 @@ public class ShipFragment extends CommonFragment {
                             }
 
                         } else {
-                            Utils.Toast(mContext, model.getMSG());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                            //Utils.Toast(mContext, model.getMSG());
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                             mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                             mediaPlayer.start();
@@ -424,8 +554,8 @@ public class ShipFragment extends CommonFragment {
     private void Ship_itm_name(final String bar, int qty) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipScanModel> call = service.sp_pda_itm_name("sp_pda_itm_name", "", getTime,
-                mShipNoModel.getItems().get(0).getSreq_date(), mShipNoModel.getItems().get(0).getSreq_no(), et_box_no.getText().toString(), bar, qty);
+        Call<ShipScanModel> call = service.sp_pda_itm_name("sp_pda_itm_name", userID, getTime,
+                mShipNoModel.getItems().get(0).getShip_date(), mShipNoModel.getItems().get(0).getShip_no(), bar, qty);
 
         call.enqueue(new Callback<ShipScanModel>() {
             @Override
@@ -444,7 +574,15 @@ public class ShipFragment extends CommonFragment {
                             }
 
                         } else {
-                            Utils.Toast(mContext, model.getMSG());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                            //Utils.Toast(mContext, model.getMSG());
                             sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
                             mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
                             mediaPlayer.start();
@@ -471,8 +609,8 @@ public class ShipFragment extends CommonFragment {
     private void BoxReadList() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipBoxModel> call = service.sp_pda_ship_box_read("sp_pda_box_read", "", getTime,
-                mShipNoModel.getItems().get(0).getSreq_date(), mShipNoModel.getItems().get(0).getSreq_no(), Integer.parseInt(et_box_no.getText().toString()));
+        Call<ShipBoxModel> call = service.sp_pda_ship_box_read("sp_pda_ship_list", userID, getTime,
+                mShipNoModel.getItems().get(0).getShip_date(), mShipNoModel.getItems().get(0).getShip_no());
 
         call.enqueue(new Callback<ShipBoxModel>() {
             @Override
@@ -525,7 +663,7 @@ public class ShipFragment extends CommonFragment {
     private void DetailDelete(int no) {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipBoxModel> call = service.sp_pda_sreqdel("sp_pda_sreqdel", "", getTime, no);
+        Call<ShipBoxModel> call = service.sp_pda_sreqdel("sp_pda_sreqdel", userID, getTime, no);
 
         call.enqueue(new Callback<ShipBoxModel>() {
             @Override
@@ -539,7 +677,15 @@ public class ShipFragment extends CommonFragment {
                             mBoxList = model.getItems();
                             //mAdapter.notifyDataSetChanged();
                         } else {
-                            Utils.Toast(mContext, model.getMSG());
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), model.getMSG(), R.drawable.popup_title_alert, new Handler() {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    if (msg.what == 1) {
+                                        mOneBtnPopup.hideDialog();
+                                    }
+                                }
+                            });
+                            //Utils.Toast(mContext, model.getMSG());
                         }
                     }
                 } else {
@@ -617,6 +763,18 @@ public class ShipFragment extends CommonFragment {
                 }
             });
 
+            //특정 데이터시 텍스트 색 변경
+            for (int i = 0; i < mAdapter.getItemCount(); i++) {
+                if (itemsList.get(i).getChk_yn().equals("N")) {
+                    if (position == i) {
+                        holder.tv_no.setTextColor(Color.RED);
+                        holder.tv_itm_name.setTextColor(Color.RED);
+                        holder.tv_order_qty.setTextColor(Color.RED);
+                        holder.tv_out_qty.setTextColor(Color.RED);
+                    }
+                }
+
+            }//Close for
 
         }
 

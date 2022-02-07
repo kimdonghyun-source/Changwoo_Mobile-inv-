@@ -14,6 +14,9 @@ public class Define {
     //출하관리(LIST)
     public static final int MENU_SHIP_LIST = 31;
 
+    //품목관리
+    public static final int MENU_ITM = 4;
+
 
 
     //---------------------------------------------------------
@@ -26,6 +29,9 @@ public class Define {
 
     //출하관리(LIST)
     public static final String TAG_SHIP_LIST = "shipList";
+
+    //품목관리
+    public static final String TAG_ITM = "itm";
 
 
 

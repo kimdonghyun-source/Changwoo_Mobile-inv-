@@ -19,15 +19,11 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -55,8 +51,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
@@ -86,39 +83,6 @@
                     android:textSize="15dp" />
 
             </LinearLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginRight="5dp"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8">
-
-            <ImageView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text2"/>
-
-            <EditText
-                android:imeOptions="actionSearch"
-                android:maxLength="10"
-                android:inputType="number"
-                android:id="@+id/et_box_no"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/fill_rect_f5edb0"
-                android:textColor="@color/black"
-                android:textSize="15dp"
-                android:paddingLeft="5dp"
-                android:layout_gravity="center"
-                android:gravity="center|left"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
 
     </LinearLayout>
 
@@ -189,19 +153,20 @@
             android:text="품목명"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.2"
+            android:layout_weight="1"
             android:textColor="@color/black"
             android:textSize="15dp"
             android:gravity="center"
+            android:maxLines="1"
             android:layout_gravity="center"/>
 
         <TextView
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_weight="0.4"
+            android:layout_weight="0.5"
             android:gravity="center"
-            android:text="지시량"
+            android:text="스캔수량"
             android:textColor="@color/black"
             android:textSize="15dp" />
 
@@ -275,38 +240,13 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/bt_next"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:layout_marginLeft="5dp"
-            android:id="@+id/bt_box_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/box_end"
-            android:background="@android:color/transparent"/>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"/>
-
-
-        <ImageButton
-            android:layout_marginRight="5dp"
-            android:id="@+id/bt_list"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/btn_list"
-            android:background="@android:color/transparent"/>
-
-    </LinearLayout>
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/menu_bottom_bt_2"
+        android:background="@android:color/transparent"/>
 
 
 

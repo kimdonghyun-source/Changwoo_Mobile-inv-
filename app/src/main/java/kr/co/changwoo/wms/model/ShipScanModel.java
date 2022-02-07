@@ -32,9 +32,9 @@ public class ShipScanModel extends ResultModel {
         //미지시량
         int sreq_rqty;
         //출하의뢰일
-        String sreq_date;
+        String ship_date;
         //순번
-        String sreq_no;
+        String ship_no;
 
         public String getCst_code() {
             return cst_code;
@@ -100,20 +100,20 @@ public class ShipScanModel extends ResultModel {
             this.sreq_rqty = sreq_rqty;
         }
 
-        public String getSreq_date() {
-            return sreq_date;
+        public String getShip_date() {
+            return ship_date;
         }
 
-        public void setSreq_date(String sreq_date) {
-            this.sreq_date = sreq_date;
+        public void setShip_date(String ship_date) {
+            this.ship_date = ship_date;
         }
 
-        public String getSreq_no() {
-            return sreq_no;
+        public String getShip_no() {
+            return ship_no;
         }
 
-        public void setSreq_no(String sreq_no) {
-            this.sreq_no = sreq_no;
+        public void setShip_no(String ship_no) {
+            this.ship_no = ship_no;
         }
     }
 }
