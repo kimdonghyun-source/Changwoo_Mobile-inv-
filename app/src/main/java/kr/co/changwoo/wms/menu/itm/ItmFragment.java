@@ -460,7 +460,7 @@ public class ItmFragment extends CommonFragment {
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, itemsList.size());
                     mAdapter.notifyDataSetChanged();
-                    itm_del_in(position);
+                    itm_del_in(item.getPda_seq());
                 }
             });
         }

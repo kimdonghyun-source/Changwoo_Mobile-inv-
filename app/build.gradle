@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 20042201
-        versionName "1.0.0"
+        versionName "1.1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -32,9 +32,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            //buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
             //buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/CHANGWOO/Mobile/\""   //창우 라이브
-            buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/Mobile/\""   //창우 라이브(변경) -APK파일 만들때
+            //buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/Mobile/\""   //창우 라이브(변경) -APK파일 만들때
         }
 
         release {
@@ -42,9 +42,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             //buildConfig 설정
-            //buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
+
+            buildConfigField "String", "API_SERVER", "\"http://211.56.248.25:14283/CHANGWOO/Mobile/\""   //창우 테스트용
             //buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/CHANGWOO/Mobile/\""   //창우 라이브
-            buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/Mobile/\""   //창우 라이브(변경) -APK파일 만들때
+            //buildConfigField "String", "API_SERVER", "\"http://114.203.209.20:14283/Mobile/\""   //창우 라이브(변경) -APK파일 만들때
 
             signingConfig signingConfigs.release
         }

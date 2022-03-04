@@ -39,6 +39,8 @@ public class ShipBoxModel extends ResultModel{
         int ship_qty;
         //상태여부
         String chk_yn;
+        //순번
+        int ship_seq;
 
         public int getPda_seq() {
             return pda_seq;
@@ -134,6 +136,14 @@ public class ShipBoxModel extends ResultModel{
 
         public void setChk_yn(String chk_yn) {
             this.chk_yn = chk_yn;
+        }
+
+        public int getShip_seq() {
+            return ship_seq;
+        }
+
+        public void setShip_seq(int ship_seq) {
+            this.ship_seq = ship_seq;
         }
     }
 }

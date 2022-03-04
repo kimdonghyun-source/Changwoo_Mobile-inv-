@@ -15,7 +15,7 @@ public class ShipNoModel extends ResultModel {
     }
 
     public class Item extends ResultModel{
-        //출하의뢰일
+        //출하일자
         String ship_date;
         //순번
         String ship_no;

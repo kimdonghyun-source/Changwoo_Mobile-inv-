@@ -21,6 +21,8 @@ public class ItmModel extends ResultModel {
         String itm_name;
         //수량
         int in_qty;
+        //순번
+        int pda_seq;
 
         public String getItm_code() {
             return itm_code;
@@ -44,6 +46,14 @@ public class ItmModel extends ResultModel {
 
         public void setIn_qty(int in_qty) {
             this.in_qty = in_qty;
+        }
+
+        public int getPda_seq() {
+            return pda_seq;
+        }
+
+        public void setPda_seq(int pda_seq) {
+            this.pda_seq = pda_seq;
         }
     }
 }

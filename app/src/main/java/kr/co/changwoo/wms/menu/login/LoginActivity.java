@@ -75,7 +75,7 @@ public class LoginActivity extends CommonCompatActivity {
         tv_version.setText(Utils.appVersionName(mContext));
 
         et_user_id = findViewById(R.id.et_user_id);
-        et_pass = findViewById(R.id.et_pass);
+        //et_pass = findViewById(R.id.et_pass);
         bt_check = findViewById(R.id.bt_check);
         bt_check.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +117,7 @@ public class LoginActivity extends CommonCompatActivity {
     private void requestLogin() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<UserInfoModel> call = service.postLogin("sp_pda_login", et_user_id.getText().toString(), et_pass.getText().toString(), "");
+        Call<UserInfoModel> call = service.postLogin("sp_pda_login", et_user_id.getText().toString(), "", "");
 
         call.enqueue(new Callback<UserInfoModel>() {
             @Override

@@ -190,6 +190,23 @@ public interface ApiClientService {
     );
 
     /**
+     * 팝업 디테일 조회
+     * @param proc  프로시져
+     * @param userid 로그인아이디
+     * @param get_date 처리일자
+     * @param ship_date 출하의뢰일자
+     * @param ship_no 출하의뢰순번
+     */
+    @POST("R2JsonProc.asp")
+    Call<ShipBoxModel> sp_pda_pop_ship_list(
+            @Query("proc") String proc,
+            @Query("param1") String userid,
+            @Query("param2") String get_date,
+            @Query("param3") String ship_date,
+            @Query("param4") String ship_no
+    );
+
+    /**
      * 출하관리 바코드 삭제
      * @param proc  프로시져
      * @param mac macadress

@@ -289,7 +289,8 @@ public class ShipDeatilFragment extends CommonFragment {
 
             final ShipDetailModel.Item item = itemsList.get(position);
 
-            holder.tv_no.setText(Integer.toString(position + 1));
+            //holder.tv_no.setText(Integer.toString(position + 1));
+            holder.tv_no.setText(Integer.toString(item.getShip_seq()));
             holder.tv_box_no.setText(Integer.toString(item.getBox_no()));
             holder.tv_itm_name.setText(item.getItm_name());
             holder.tv_order_qty.setText(Integer.toString(item.getSreq_qty()));

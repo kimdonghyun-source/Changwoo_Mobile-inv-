@@ -36,6 +36,9 @@ public class ShipScanModel extends ResultModel {
         //순번
         String ship_no;
 
+        //스캔할때 순번
+        String ship_seq;
+
         public String getCst_code() {
             return cst_code;
         }
@@ -114,6 +117,14 @@ public class ShipScanModel extends ResultModel {
 
         public void setShip_no(String ship_no) {
             this.ship_no = ship_no;
+        }
+
+        public String getShip_seq() {
+            return ship_seq;
+        }
+
+        public void setShip_seq(String ship_seq) {
+            this.ship_seq = ship_seq;
         }
     }
 }

@@ -39,6 +39,8 @@ public class ShipDetailModel extends ResultModel {
         int ship_qty;
         //box_no
         int box_no;
+        //순번
+        int ship_seq;
 
         public int getPda_seq() {
             return pda_seq;
@@ -134,6 +136,14 @@ public class ShipDetailModel extends ResultModel {
 
         public void setBox_no(int box_no) {
             this.box_no = box_no;
+        }
+
+        public int getShip_seq() {
+            return ship_seq;
+        }
+
+        public void setShip_seq(int ship_seq) {
+            this.ship_seq = ship_seq;
         }
     }
 }

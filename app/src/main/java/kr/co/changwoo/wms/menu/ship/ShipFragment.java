@@ -41,6 +41,7 @@ import kr.co.changwoo.wms.custom.CommonFragment;
 import kr.co.changwoo.wms.honeywell.AidcReader;
 import kr.co.changwoo.wms.menu.main.BaseActivity;
 import kr.co.changwoo.wms.menu.popup.OneBtnPopup;
+import kr.co.changwoo.wms.menu.popup.ShipListPopup;
 import kr.co.changwoo.wms.menu.sin.SinFragment;
 import kr.co.changwoo.wms.model.ResultModel;
 import kr.co.changwoo.wms.model.ShipBoxModel;
@@ -52,7 +53,6 @@ import kr.co.changwoo.wms.network.ApiClientService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 public class ShipFragment extends CommonFragment {
 
@@ -69,6 +69,7 @@ public class ShipFragment extends CommonFragment {
     ListAdapter mAdapter;
 
     ShipBoxModel mBoxModel;
+    ShipBoxModel.Item mBoxItmModel;
     List<ShipBoxModel.Item> mBoxList;
 
     ShipNoModel mShipNoModel;
@@ -78,7 +79,7 @@ public class ShipFragment extends CommonFragment {
     int soundId;
     MediaPlayer mediaPlayer;
     OneBtnPopup mOneBtnPopup;
-
+    ShipListPopup mShipListPopup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,7 @@ public class ShipFragment extends CommonFragment {
 
         bt_barcode.setOnClickListener(onClickListener);
         bt_next.setOnClickListener(onClickListener);
+        tv_ship_no.setOnClickListener(onClickListener);
 
         Ship_list.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mAdapter = new ListAdapter(getActivity());
@@ -116,32 +118,6 @@ public class ShipFragment extends CommonFragment {
         mLayoutManager.setStackFromEnd(true);
 
         Ship_list.setLayoutManager(mLayoutManager);
-
-        /*et_box_no.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(et_box_no.getWindowToken(), 0);
-                    if (tv_ship_no.getText().equals("")) {
-                        Utils.Toast(mContext, "출하의뢰서를 먼저 스캔해주세요.");
-                    } else if (et_box_no.getText().toString().equals("")) {
-                        Utils.Toast(mContext, "BOXNO를 입력해주세요.");
-                    } else {
-                        if (mAdapter.getItemCount() > 0) {
-                            mAdapter.clearData();
-                            mAdapter.itemsList.clear();
-                            mBoxList.clear();
-                            mAdapter.notifyDataSetChanged();
-                        }
-
-                        BoxReadList();
-                    }
-
-                }
-                return true;
-            }
-        });*/
 
         long now = System.currentTimeMillis();
         Date date = new Date(now);
@@ -196,25 +172,34 @@ public class ShipFragment extends CommonFragment {
                             mediaPlayer.start();
                             return;
                         }
-                        /*if (et_box_no.getText().toString().equals("")) {
-                            Utils.Toast(mContext, "BOXNO를 입력해주세요.");
-                            sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
-                            mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
-                            mediaPlayer.start();
-                            return;
-                        }*/
+
                         if (barcodeScan.length() == 16) {
-
                             Ship_itm_req(barcodeScan);
-                            //et_barcode.setText(barcodeScan);
-
                         } else {
-                            String str1 = barcodeScan;
-                            String word1 = str1.split("    ")[0];
-                            String word2 = str1.split("    ")[1];
+                            try {
+                                String str1 = barcodeScan;
+                                String word1 = str1.split("    ")[0];
+                                String word2 = str1.split("    ")[1];
 
-                            Ship_itm_name(word1, Integer.parseInt(word2));
-                            //et_barcode.setText(barcodeScan);
+                                Ship_itm_name(word1, Integer.parseInt(word2));
+                                //et_barcode.setText(barcodeScan);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                mOneBtnPopup = new OneBtnPopup(getActivity(), "형식이 올바르지 않습니다.", R.drawable.popup_title_alert, new Handler() {
+                                    @Override
+                                    public void handleMessage(Message msg) {
+                                        if (msg.what == 1) {
+                                            mOneBtnPopup.hideDialog();
+                                        }
+                                    }
+                                });
+
+                                sound_pool.play(soundId, 1f, 1f, 0, 1, 1f);
+                                mediaPlayer = MediaPlayer.create(mContext, R.raw.beepum);
+                                mediaPlayer.start();
+                            }
+
+
                         }
 
 
@@ -231,61 +216,6 @@ public class ShipFragment extends CommonFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                /*case R.id.bt_box_end:
-                    if (mAdapter.getItemCount() > 0) {
-                        //et_box_no.setFocusable(true);
-                        mAdapter.clearData();
-                        mAdapter.itemsList.clear();
-                        mBoxList.clear();
-                        mAdapter.notifyDataSetChanged();
-                        //hideSoftInputFromWindow
-                        *//*InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.showSoftInput(et_box_no, 0);*//*
-                    } else {
-                        mOneBtnPopup = new OneBtnPopup(getActivity(), "내역이 없습니다.", R.drawable.popup_title_alert, new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                if (msg.what == 1) {
-                                    mOneBtnPopup.hideDialog();
-                                }
-                            }
-                        });
-                        return;
-                    }
-                    break;*/
-
-                /*case R.id.bt_list:
-                    if (tv_ship_no.getText().equals("")) {
-                        mOneBtnPopup = new OneBtnPopup(getActivity(), "출하의뢰서를 먼저 스캔해주세요.", R.drawable.popup_title_alert, new Handler() {
-                            @Override
-                            public void handleMessage(Message msg) {
-                                if (msg.what == 1) {
-                                    mOneBtnPopup.hideDialog();
-                                }
-                            }
-                        });
-                        return;
-                    } else {
-                        Intent intent = new Intent(getActivity(), BaseActivity.class);
-                        intent.putExtra("menu", Define.MENU_SHIP_LIST);
-                        Bundle extras = new Bundle();
-                        extras.putString("ship_no", tv_ship_no.getText().toString());
-                        extras.putString("cst_name", tv_cst_name.getText().toString());
-                        extras.putString("ship_date", mShipNoModel.getItems().get(0).getShip_date());
-                        extras.putString("ship_seq", mShipNoModel.getItems().get(0).getShip_no());
-                        intent.putExtra("args", extras);
-
-                        if (mAdapter.getItemCount() > 0) {
-                            mAdapter.clearData();
-                            mAdapter.itemsList.clear();
-                            mAdapter.notifyDataSetChanged();
-                            //et_box_no.setText("");
-                        }
-
-                        startActivityForResult(intent, 100);
-                    }
-
-                    break;*/
 
                 case R.id.bt_barcode:
                     if (et_barcode.getText().toString().equals("")) {
@@ -337,7 +267,7 @@ public class ShipFragment extends CommonFragment {
                                 String word2 = str1.split("    ")[1];
 
                                 Ship_itm_name(word1, Integer.parseInt(word2));
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 mOneBtnPopup = new OneBtnPopup(getActivity(), "형식이 올바르지 않습니다.\n문자와 숫자 사이 간격은 4자리입니다.", R.drawable.popup_title_alert, new Handler() {
                                     @Override
@@ -349,8 +279,6 @@ public class ShipFragment extends CommonFragment {
                                 });
                             }
 
-
-                            //et_barcode.setText(barcodeScan);
                         }
 
 
@@ -359,7 +287,7 @@ public class ShipFragment extends CommonFragment {
                     break;
 
                 case R.id.bt_next:
-                    if (mAdapter.getItemCount() <= 0){
+                    if (mAdapter.getItemCount() <= 0) {
                         mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록할 내역이 없습니다.", R.drawable.popup_title_alert, new Handler() {
                             @Override
                             public void handleMessage(Message msg) {
@@ -371,8 +299,8 @@ public class ShipFragment extends CommonFragment {
                         return;
                     }
 
-                    for (int i = 0; i < mAdapter.getItemCount(); i ++){
-                        if (mBoxList.get(i).getChk_yn().equals("N")){
+                    for (int i = 0; i < mAdapter.getItemCount(); i++) {
+                        if (mBoxList.get(i).getChk_yn().equals("N")) {
                             mOneBtnPopup = new OneBtnPopup(getActivity(), "출하등록 불가.", R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
@@ -387,6 +315,23 @@ public class ShipFragment extends CommonFragment {
 
                     requestSinSave();
 
+                    break;
+
+                case R.id.tv_ship_no:
+                    if (tv_ship_no.getText().toString().equals("")) {
+                        Utils.Toast(mContext, "출하의뢰서를 스캔해주세요.");
+                        return;
+                    } else {
+                        mShipListPopup = new ShipListPopup(getActivity(), R.drawable.popup_title_alert, mShipNoModel.getItems().get(0).getShip_date(),
+                                mShipNoModel.getItems().get(0).getShip_no(), new Handler() {
+                            @Override
+                            public void handleMessage(Message msg) {
+                                if (msg.what == 1) {
+                                    mShipListPopup.hideDialog();
+                                }
+                            }
+                        });
+                    }
                     break;
             }
 
@@ -410,7 +355,7 @@ public class ShipFragment extends CommonFragment {
                     if (model != null) {
                         //mShipScanModel.getFlag().equals("OK")
                         if (model.getFlag() == ResultModel.SUCCESS) {
-                            mOneBtnPopup = new OneBtnPopup(getActivity(), "'"+tv_ship_no.getText().toString() +"'의 출하등록이 완료 되었습니다.",
+                            mOneBtnPopup = new OneBtnPopup(getActivity(), "'" + tv_ship_no.getText().toString() + "'의 출하등록이 완료 되었습니다.",
                                     R.drawable.popup_title_alert, new Handler() {
                                 @Override
                                 public void handleMessage(Message msg) {
@@ -513,7 +458,7 @@ public class ShipFragment extends CommonFragment {
                         if (mScanModel.getFlag() == ResultModel.SUCCESS) {
 
                             if (model.getItems().size() > 0) {
-                                et_barcode.setText(mScanModel.getItems().get(0).getItm_name() + "    " + mScanModel.getItems().get(0).getSreq_qty());
+                                et_barcode.setText(mScanModel.getItems().get(0).getShip_seq() + "  " + mScanModel.getItems().get(0).getItm_name() + "    " + mScanModel.getItems().get(0).getSreq_qty());
                                 BoxReadList();
 
                             }
@@ -568,7 +513,8 @@ public class ShipFragment extends CommonFragment {
                         if (mScanModel.getFlag() == ResultModel.SUCCESS) {
 
                             if (model.getItems().size() > 0) {
-                                et_barcode.setText(mScanModel.getItems().get(0).getItm_name() + "    " + mScanModel.getItems().get(0).getSreq_qty());
+                                //et_barcode.setText(mScanModel.getItems().get(0).getItm_name() + "    " + mScanModel.getItems().get(0).getSreq_qty());
+                                et_barcode.setText(mScanModel.getItems().get(0).getShip_seq() + "  " + mScanModel.getItems().get(0).getItm_name() + "    " + mScanModel.getItems().get(0).getSreq_qty());
                                 BoxReadList();
 
                             }
@@ -609,7 +555,7 @@ public class ShipFragment extends CommonFragment {
     private void BoxReadList() {
         ApiClientService service = ApiClientService.retrofit.create(ApiClientService.class);
 
-        Call<ShipBoxModel> call = service.sp_pda_ship_box_read("sp_pda_ship_list", userID, getTime,
+        Call<ShipBoxModel> call = service.sp_pda_ship_box_read("sp_pda_ship_unit", userID, getTime,
                 mShipNoModel.getItems().get(0).getShip_date(), mShipNoModel.getItems().get(0).getShip_no());
 
         call.enqueue(new Callback<ShipBoxModel>() {
@@ -631,7 +577,6 @@ public class ShipFragment extends CommonFragment {
                                 for (int i = 0; i < model.getItems().size(); i++) {
                                     ShipBoxModel.Item item = (ShipBoxModel.Item) model.getItems().get(i);
                                     mAdapter.addData(item);
-                                    //et_barcode.setText(mBoxModel.getItems().get(i).getItm_name() + "    " + mBoxModel.getItems().get(i).getShip_qty());
                                 }
                                 mAdapter.notifyDataSetChanged();
                                 Ship_list.setAdapter(mAdapter);
@@ -746,7 +691,8 @@ public class ShipFragment extends CommonFragment {
 
             final ShipBoxModel.Item item = itemsList.get(position);
 
-            holder.tv_no.setText(Integer.toString(position + 1));
+            //holder.tv_no.setText(Integer.toString(position + 1));
+            holder.tv_no.setText(Integer.toString(item.getShip_seq()));
             holder.tv_itm_name.setText(item.getItm_name());
             holder.tv_order_qty.setText(Integer.toString(item.getSreq_qty()));
             holder.tv_out_qty.setText(Integer.toString(item.getShip_qty()));
@@ -764,7 +710,7 @@ public class ShipFragment extends CommonFragment {
             });
 
             //특정 데이터시 텍스트 색 변경
-            for (int i = 0; i < mAdapter.getItemCount(); i++) {
+            /*for (int i = 0; i < mAdapter.getItemCount(); i++) {
                 if (itemsList.get(i).getChk_yn().equals("N")) {
                     if (position == i) {
                         holder.tv_no.setTextColor(Color.RED);
@@ -774,7 +720,7 @@ public class ShipFragment extends CommonFragment {
                     }
                 }
 
-            }//Close for
+            }//Close for*/
 
         }
 
