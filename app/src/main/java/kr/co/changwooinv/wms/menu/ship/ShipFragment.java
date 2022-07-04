@@ -35,6 +35,8 @@ public class ShipFragment extends CommonFragment {
 
     }//Close onCreateView
 
+
+
     @Override
     public void onResume() {
         super.onResume();
