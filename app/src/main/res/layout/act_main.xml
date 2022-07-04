@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="50dp"
         android:padding="5dp">
 
         <ImageButton
@@ -56,6 +56,22 @@
             android:layout_gravity="right"
             android:background="@android:color/transparent"
             android:src="@drawable/main_menu3" />
+
+        <ImageButton
+            android:id="@+id/bt_menu_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:background="@android:color/transparent"
+            android:src="@drawable/main_menu4" />
+
+        <ImageButton
+            android:id="@+id/bt_menu_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:src="@drawable/main_menu5" />
 
     </LinearLayout>
 </LinearLayout>

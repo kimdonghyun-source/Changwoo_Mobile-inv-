@@ -5,11 +5,11 @@ android {
     buildToolsVersion "29.0.2"
     
     defaultConfig {
-        applicationId "kr.co.CHANGWOO.wms"
+        applicationId "kr.co.CHANGWOO_INV.wms"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 20042201
-        versionName "1.1.6"
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
