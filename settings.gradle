@@ -1,2 +1,2 @@
-rootProject.name='ChangWoomWms'
+rootProject.name='ChangWooinv_mWms'
 include ':app', ':DataCollection', ':jelib'
