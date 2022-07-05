@@ -65,10 +65,10 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/text13"/>
 
-            <EditText
+            <TextView
                 android:layout_marginLeft="2dp"
                 android:background="@drawable/fill_rect_f5edb0"
-                android:id="@+id/tv_ship_no"
+                android:id="@+id/tv_wh"
                 android:textSize="20dp"
                 android:gravity="center"
                 android:textColor="@color/black"
@@ -83,9 +83,9 @@
                 android:layout_gravity="center"
                 android:background="@drawable/text9" />
 
-            <EditText
+            <TextView
                 android:background="@drawable/fill_rect_f5edb0"
-                android:id="@+id/tv_cst_name"
+                android:id="@+id/tv_loc"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textColor="@color/black"
@@ -128,10 +128,9 @@
             android:background="@drawable/menu_moveloc_searchloc_1"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/et_serial"
+            <TextView
+                android:id="@+id/tv_serial"
                 style="@style/EditTextLocation"
-                android:editable="false"
                 android:layout_height="wrap_content"/>
 
 
@@ -192,7 +191,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ship_listview"
+        android:id="@+id/move_listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

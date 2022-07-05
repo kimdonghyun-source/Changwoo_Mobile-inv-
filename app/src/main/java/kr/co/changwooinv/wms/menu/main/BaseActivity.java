@@ -26,11 +26,16 @@ import kr.co.changwooinv.wms.common.Define;
 import kr.co.changwooinv.wms.custom.BusProvider;
 import kr.co.changwooinv.wms.custom.CommonCompatActivity;
 import kr.co.changwooinv.wms.custom.CommonFragment;
+import kr.co.changwooinv.wms.menu.inv_itm.InvItmDetailFragment;
 import kr.co.changwooinv.wms.menu.inv_itm.InvItmFragment;
+import kr.co.changwooinv.wms.menu.inv_lot.InvLotDetailFragment;
 import kr.co.changwooinv.wms.menu.inv_lot.InvLotFragment;
+import kr.co.changwooinv.wms.menu.inv_ok.InvOkDetailFragment;
 import kr.co.changwooinv.wms.menu.inv_ok.InvOkFragment;
+import kr.co.changwooinv.wms.menu.move.MoveDetailFragment;
 import kr.co.changwooinv.wms.menu.move.MoveFragment;
 import kr.co.changwooinv.wms.menu.popup.TwoBtnPopup;
+import kr.co.changwooinv.wms.menu.ship.ShipDetailFragment;
 import kr.co.changwooinv.wms.menu.ship.ShipFragment;
 import kr.co.changwooinv.wms.model.UserInfoModel;
 
@@ -114,11 +119,27 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //재고확인 디테일
+            case Define.MENU_INV_OK_DETAIL: {
+                CommonFragment fragment = new InvOkDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_INV_OK_DETAIL, R.id.fl_content);
+                break;
+            }
+
             //입고관리
             case Define.MENU_INV_ITM: {
                 CommonFragment fragment = new InvItmFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_INV_ITM, R.id.fl_content);
+                break;
+            }
+
+            //입고관리 디테일
+            case Define.MENU_INV_ITM_DETAIL: {
+                CommonFragment fragment = new InvItmDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_INV_ITM_DETAIL, R.id.fl_content);
                 break;
             }
 
@@ -130,6 +151,14 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //출고관리 디테일
+            case Define.MENU_SHIP_DETAIL: {
+                CommonFragment fragment = new ShipDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_SHIP_DETAIL, R.id.fl_content);
+                break;
+            }
+
             //이동관리
             case Define.MENU_MOVE: {
                 CommonFragment fragment = new MoveFragment();
@@ -138,11 +167,27 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //이동관리 디테일
+            case Define.MENU_MOVE_DETAIL: {
+                CommonFragment fragment = new MoveDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_MOVE_DETAIL, R.id.fl_content);
+                break;
+            }
+
             //재고실사
             case Define.MENU_INV_LOT: {
                 CommonFragment fragment = new InvLotFragment();
                 fragment.setArguments(args);
                 replaceContent(fragment, Define.TAG_INV_LOT, R.id.fl_content);
+                break;
+            }
+
+            //재고실사 디테일
+            case Define.MENU_INV_LOT_DETAIL: {
+                CommonFragment fragment = new InvLotDetailFragment();
+                fragment.setArguments(args);
+                replaceContent(fragment, Define.TAG_INV_LOT_DETAIL, R.id.fl_content);
                 break;
             }
 
@@ -171,8 +216,20 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //재고확인 디테일
+            case Define.MENU_INV_OK_DETAIL: {
+                image = R.drawable.changwoo_title1;
+                break;
+            }
+
             //입고관리
             case Define.MENU_INV_ITM: {
+                image = R.drawable.changwoo_title2;
+                break;
+            }
+
+            //입고관리 디테일
+            case Define.MENU_INV_ITM_DETAIL: {
                 image = R.drawable.changwoo_title2;
                 break;
             }
@@ -183,14 +240,32 @@ public class BaseActivity extends CommonCompatActivity {
                 break;
             }
 
+            //출고관리 디테일
+            case Define.MENU_SHIP_DETAIL: {
+                image = R.drawable.changwoo_title3;
+                break;
+            }
+
             //이동관리
             case Define.MENU_MOVE: {
                 image = R.drawable.changwoo_title4;
                 break;
             }
 
+            //이동관리 디테일
+            case Define.MENU_MOVE_DETAIL: {
+                image = R.drawable.changwoo_title4;
+                break;
+            }
+
             //재고실사
             case Define.MENU_INV_LOT: {
+                image = R.drawable.changwoo_title5;
+                break;
+            }
+
+            //재고실사 디테일
+            case Define.MENU_INV_LOT_DETAIL: {
                 image = R.drawable.changwoo_title5;
                 break;
             }
@@ -350,10 +425,24 @@ public class BaseActivity extends CommonCompatActivity {
                                         break;
                                     }
 
+                                    //재고확인 디테일
+                                    case Define.MENU_INV_OK_DETAIL: {
+                                        CommonFragment fragment = new InvOkDetailFragment();
+                                        replaceContent(fragment, Define.TAG_INV_OK_DETAIL, R.id.fl_content);
+                                        break;
+                                    }
+
                                     //입고관리
                                     case Define.MENU_INV_ITM: {
                                         CommonFragment fragment = new InvItmFragment();
                                         replaceContent(fragment, Define.TAG_INV_ITM, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //입고관리 디테일
+                                    case Define.MENU_INV_ITM_DETAIL: {
+                                        CommonFragment fragment = new InvItmDetailFragment();
+                                        replaceContent(fragment, Define.TAG_INV_ITM_DETAIL, R.id.fl_content);
                                         break;
                                     }
 
@@ -364,6 +453,13 @@ public class BaseActivity extends CommonCompatActivity {
                                         break;
                                     }
 
+                                    //출고관리 디테일
+                                    case Define.MENU_SHIP_DETAIL: {
+                                        CommonFragment fragment = new ShipDetailFragment();
+                                        replaceContent(fragment, Define.TAG_SHIP_DETAIL, R.id.fl_content);
+                                        break;
+                                    }
+
                                     //이동관리
                                     case Define.MENU_MOVE: {
                                         CommonFragment fragment = new MoveFragment();
@@ -371,10 +467,24 @@ public class BaseActivity extends CommonCompatActivity {
                                         break;
                                     }
 
+                                    //이동관리 디테일
+                                    case Define.MENU_MOVE_DETAIL: {
+                                        CommonFragment fragment = new MoveDetailFragment();
+                                        replaceContent(fragment, Define.TAG_MOVE_DETAIL, R.id.fl_content);
+                                        break;
+                                    }
+
                                     //재고실사
                                     case Define.MENU_INV_LOT: {
                                         CommonFragment fragment = new InvLotFragment();
                                         replaceContent(fragment, Define.TAG_INV_LOT, R.id.fl_content);
+                                        break;
+                                    }
+
+                                    //재고실사 디테일
+                                    case Define.MENU_INV_LOT_DETAIL: {
+                                        CommonFragment fragment = new InvLotDetailFragment();
+                                        replaceContent(fragment, Define.TAG_INV_LOT_DETAIL, R.id.fl_content);
                                         break;
                                     }
 

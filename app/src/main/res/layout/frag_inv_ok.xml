@@ -72,10 +72,9 @@
             android:background="@drawable/menu_moveloc_searchloc_1"
             android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/et_serial"
+            <TextView
+                android:id="@+id/tv_serial"
                 style="@style/EditTextLocation"
-                android:editable="false"
                 android:layout_height="wrap_content"/>
 
 
@@ -149,7 +148,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ship_listview"
+        android:id="@+id/inv_ok_listview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
